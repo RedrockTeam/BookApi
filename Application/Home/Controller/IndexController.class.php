@@ -32,8 +32,19 @@ class IndexController extends Controller {
         $this->ajaxReturn($data);
     }
     public function borrow() {
-        $this->check();
         $readerId = I('post.readerId');
+        $time = I('post.timestamp');
+        $string = I('post.string');
+        $secret = I('post.secret');
+
+        $verify = sha1(sha1($time).md5($string)."redrock");
+
+        if ($verify != $secret) {
+            $this->ajaxReturn(array(
+                'status' => '-400',
+                'info' => 'Secret is Error'
+            ));
+        }
         $info = M('t_ts_jy')->where("sfrzh = '$readerId'")->select();
         $i = 0;
         foreach ($info as $var) {
@@ -50,8 +61,20 @@ class IndexController extends Controller {
     }
 
     public function readerInfo() {
-     	$this->check();
+        $time = I('post.timestamp');
+        $string = I('post.string');
+        $secret = I('post.secret');
         $readerId = I('post.readerId');
+
+        $verify = sha1(sha1($time).md5($string)."redrock");
+
+        if ($verify != $secret) {
+            $this->ajaxReturn(array(
+                'status' => '-400',
+                'info' => 'Secret is Error'
+            ));
+        }
+
         $info = M('t_ts_dz')->where("zjhm = '$readerId'")->select();
         $data['name'] = $info[0]['DZXM'];                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       
         $data['history'] = $info[0]['LJCC'];
@@ -66,8 +89,19 @@ class IndexController extends Controller {
     }
 
     public function nameSearch() {
-    	$this->check();
+        $time = I('post.timestamp');
+        $string = I('post.string');
+        $secret = I('post.secret');
         $bookName = I('post.bookName');
+
+        $verify = sha1(sha1($time).md5($string)."redrock");
+
+        if ($verify != $secret) {
+            $this->ajaxReturn(array(
+                'status' => '-400',
+                'info' => 'Secret is Error'
+            ));
+        }
         $info = M('t_ts')->field("tm,ssh,zrz,gcdmc")->where("tm like '%$bookName%' AND ztbs = '41' AND gcdmc != '报损库' AND gcdmc != '丢失' AND gcdmc != '教阅室（教阅库）'")->group('tm,ssh,zrz,gcdmc')->select();
         $i = 0;
         foreach ($info as $var) {
@@ -87,8 +121,18 @@ class IndexController extends Controller {
     }
 
     public function writerSearch() {
-        $this->check();
+        $time = I('post.timestamp');
+        $string = I('post.string');
+        $secret = I('post.secret');
         $bookWriter = I('post.bookWriter');
+        $verify = sha1(sha1($time).md5($string)."redrock");
+
+        if ($verify != $secret) {
+            $this->ajaxReturn(array(
+                'status' => '-400',
+                'info' => 'Secret is Error'
+            ));
+        }
         $info = M('t_ts')->field("tm,ssh,zrz,gcdmc")->where("zrz like '%$bookWriter%' AND ztbs = '41' AND gcdmc != '报损库' AND gcdmc != '丢失' AND gcdmc != '教阅室（教阅库）'")->group('tm,ssh,zrz,gcdmc')->select();
         $i = 0;
         foreach ($info as $var) {
@@ -108,8 +152,20 @@ class IndexController extends Controller {
     }
 
     public function Board() {
-        $this->check();
-		$info = M('t_ts_dz')->order("ljcc + yjcs  desc")->limit(20)->select();
+        $time = I('post.timestamp');
+        $string = I('post.string');
+        $secret = I('post.secret');
+
+        $verify = sha1(sha1($time).md5($string)."redrock");
+
+        if ($verify != $secret) {
+            $this->ajaxReturn(array(
+                'status' => '-400',
+                'info' => 'Secret is Error'
+            ));
+        }
+
+        $info = M('t_ts_dz')->order("ljcc + yjcs  desc")->limit(20)->select();
 
         $i = 0;
         foreach ($info as $var) {
@@ -124,20 +180,6 @@ class IndexController extends Controller {
             "info" => "success",
             "data" => $data
         ));
-    }
-    private function check(){
-    	$time = I('post.timestamp');
-        $string = I('post.string');
-        $secret = I('post.secret');
-
-        $verify = sha1(sha1($time).md5($string)."redrock");
-
-        if ($verify != $secret) {
-            $this->ajaxReturn(array(
-                'status' => '-400',
-                'info' => 'Secret is Error'
-            ));
-        }
     }
 
 
