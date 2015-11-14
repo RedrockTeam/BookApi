@@ -91,6 +91,7 @@ class IndexController extends Controller {
     }
 
     public function nameSearch() {
+        $begin = I('post.begin');
         $time = I('post.timestamp');
         $string = I('post.string');
         $secret = I('post.secret');
@@ -104,7 +105,7 @@ class IndexController extends Controller {
                 'info' => 'Secret is Error'
             ));
         }
-        $info = M('t_ts')->field("tm,ssh,zrz,gcdmc")->where("tm like '%$bookName%' AND ztbs = '41' AND gcdmc != '报损库' AND gcdmc != '丢失' AND gcdmc != '教阅室（教阅库）'")->group('tm,ssh,zrz,gcdmc')->select();
+        $info = M('t_ts')->field("tm,ssh,zrz,gcdmc")->where("tm like '%$bookName%' AND ztbs = '41' AND gcdmc != '报损库' AND gcdmc != '丢失' AND gcdmc != '教阅室（教阅库）'")->group('tm,ssh,zrz,gcdmc')->limit($begin,6)->select();
         $i = 0;
         foreach ($info as $var) {
             $data[$i]['bookName'] = $var['TM'];
@@ -123,6 +124,7 @@ class IndexController extends Controller {
     }
 
     public function writerSearch() {
+        $begin = I('post.begin');
         $time = I('post.timestamp');
         $string = I('post.string');
         $secret = I('post.secret');
@@ -135,7 +137,7 @@ class IndexController extends Controller {
                 'info' => 'Secret is Error'
             ));
         }
-        $info = M('t_ts')->field("tm,ssh,zrz,gcdmc")->where("zrz like '%$bookWriter%' AND ztbs = '41' AND gcdmc != '报损库' AND gcdmc != '丢失' AND gcdmc != '教阅室（教阅库）'")->group('tm,ssh,zrz,gcdmc')->select();
+        $info = M('t_ts')->field("tm,ssh,zrz,gcdmc")->where("zrz like '%$bookWriter%' AND ztbs = '41' AND gcdmc != '报损库' AND gcdmc != '丢失' AND gcdmc != '教阅室（教阅库）'")->group('tm,ssh,zrz,gcdmc')->limit($begin,6)->select();
         $i = 0;
         foreach ($info as $var) {
             $data[$i]['bookName'] = $var['TM'];
