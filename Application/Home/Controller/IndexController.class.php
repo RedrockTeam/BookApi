@@ -7,7 +7,9 @@ class IndexController extends Controller {
         //$this->assign('info','这是一个后端数据');
         $this->display();
     }*/
-
+    public function test(){
+        $this->ajaxReturn('success');
+    }
     public function _initialize() {
         if (!$this->checkMethodPost()) {
             $data = array(
