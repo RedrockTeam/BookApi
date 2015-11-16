@@ -186,5 +186,39 @@ class IndexController extends Controller {
         ));
     }
 
+    public function bookSearch(){
+        $begin = I('post.begin');
+        $time = I('post.timestamp');
+        $string = I('post.string');
+        $secret = I('post.secret');
+        $content = I('post.content');
+        $verify = sha1(sha1($time).md5($string)."redrock");
+        if ($verify != $secret) {
+            $this->ajaxReturn(array(
+                'status' => '-400',
+                'info' => 'Secret is Error'
+            ));
+        }
+        $info = M('t_ts')->field("tm,ssh,zrz,gcdmc")->where("(zrz like '%$content%' OR tm like '%$content%') AND ztbs = '41' AND gcdmc != '报损库' AND gcdmc != '丢失' AND gcdmc != '教阅室（教阅库）'")->group('tm,ssh,zrz,gcdmc')->limit($begin,12)->select();
+        $i = 0;
+        foreach ($info as $var) {
+            $data[$i]['bookName'] = $var['TM'];
+            $data[$i]['code'] = $var['SSH'];
+            $data[$i]['writer'] = $var['ZRZ'];
+            $data[$i]['place'] = $var['GCDMC'];
+            $i++;
+        }
+
+        $this->ajaxReturn(array(
+            "status" => 200,
+            "info" => "success",
+            "data" => $data
+        ));
+    }
+
+
+
+
+
 
 }
