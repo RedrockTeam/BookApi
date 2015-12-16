@@ -209,7 +209,7 @@ class IndexController extends Controller {
             $data[$i]['place'] = $var['GCDMC'];
             foreach ($char as $key => $value) {
                 $reg = "/^".$key."/";
-                if(preg_match($reg, $var['GCDMC']))
+                if(preg_match($reg, $var['SSH']))
                     $data[$i]['borrowroom'] = $value;
             }
             if(!isset($data[$i]['borrowroom']))    $data[$i]['borrowroom'] = "阅览室(不外借)";
