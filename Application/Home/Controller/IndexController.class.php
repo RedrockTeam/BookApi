@@ -200,12 +200,19 @@ class IndexController extends Controller {
             ));
         }
         $info = M('t_ts')->field("tm,ssh,zrz,gcdmc")->where("(zrz like '%$content%' OR tm like '%$content%') AND ztbs = '41' AND gcdmc != '报损库' AND gcdmc != '丢失' AND gcdmc != '教阅室（教阅库）'")->group('tm,ssh,zrz,gcdmc')->limit($begin,12)->select();
+        $char = array('[ABCDEGHJK]' => '社科借阅室', 'F' => '经济借阅室', '[NOPQRSTUVWXYZ]' => '科技借阅室', 'T[A-Z]{1}' => '借阅室', 'I' => '文学借阅室' );
         $i = 0;
         foreach ($info as $var) {
             $data[$i]['bookName'] = $var['TM'];
             $data[$i]['code'] = $var['SSH'];
             $data[$i]['writer'] = $var['ZRZ'];
             $data[$i]['place'] = $var['GCDMC'];
+            foreach ($char as $key => $value) {
+                $reg = "/^".$key."/";
+                if(preg_match($reg, $var['GCDMC']))
+                    $data[$i]['borrowroom'] = $value;
+            }
+            if(!isset($data[$i]['borrowroom']))    $data[$i]['borrowroom'] = "阅览室(不外借)";
             $i++;
         }
 
